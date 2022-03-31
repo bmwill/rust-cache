@@ -14,6 +14,9 @@ inputs:
   target-dir:
     description: "The target dir that should be cleaned and persisted, defaults to `./target`"
     required: false
+  path:
+    description: 'Additional list of files, directories, and wildcard patterns to cache and restore'
+    required: false
   cache-on-failure:
     description: "Cache even if the build fails. Defaults to false"
     required: false

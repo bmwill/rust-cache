@@ -59524,6 +59524,7 @@ process.on("uncaughtException", (e) => {
 const cwd = core.getInput("working-directory");
 // TODO: this could be read from .cargo config file directly
 const targetDir = core.getInput("target-dir") || "./target";
+const extraPaths = core.getInput("path").split("\n").map(s => s.trim()).filter(x => x !== "");
 if (cwd) {
     process.chdir(cwd);
 }
@@ -59538,6 +59539,7 @@ const paths = {
     cache: external_path_default().join(cargoHome, "registry/cache"),
     git: external_path_default().join(cargoHome, "git"),
     target: targetDir,
+    extraPaths,
 };
 const RefKey = "GITHUB_REF";
 function isValidEvent() {
@@ -59574,6 +59576,7 @@ async function getCacheConfig() {
             paths.cache,
             paths.index,
             paths.target,
+            ...paths.extraPaths,
         ],
         key: `${key}-${lockHash}`,
         restoreKeys: [key],

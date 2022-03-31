@@ -17,6 +17,7 @@ process.on("uncaughtException", (e) => {
 const cwd = core.getInput("working-directory");
 // TODO: this could be read from .cargo config file directly
 const targetDir = core.getInput("target-dir") || "./target";
+const extraPaths = core.getInput("path").split("\n").map(s => s.trim()).filter(x => x !== "");
 if (cwd) {
   process.chdir(cwd);
 }
@@ -33,6 +34,7 @@ export const paths = {
   cache: path.join(cargoHome, "registry/cache"),
   git: path.join(cargoHome, "git"),
   target: targetDir,
+  extraPaths,
 };
 
 interface CacheConfig {
@@ -82,6 +84,7 @@ export async function getCacheConfig(): Promise<CacheConfig> {
       paths.cache,
       paths.index,
       paths.target,
+      ...paths.extraPaths,
     ],
     key: `${key}-${lockHash}`,
     restoreKeys: [key],
